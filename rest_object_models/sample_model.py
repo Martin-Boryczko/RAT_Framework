@@ -1,5 +1,5 @@
 import json
-from abc import ABC  ### is this needed ?
+from abc import ABC
 
 import requests
 
@@ -8,13 +8,13 @@ from rest_object_models.rest_object_interface import RestObjectInterface
 
 class SampleModel(RestObjectInterface, ABC):
 
-    def __init__(self):
+    def __init__(self, first_name=None, last_name=None, age=None):
         RestObjectInterface.__init__(self)
         self.URL = ""
 
-        self.age = None
-        self.last_name = None
-        self.first_name = None
+        self.first_name = first_name
+        self.last_name = last_name
+        self.age = age
 
         self.used_required_items = {"first_name": self.USED, "last_name": self.USED}
         self.used_optional_items = {"age": self.USED}
@@ -41,22 +41,34 @@ class SampleModel(RestObjectInterface, ABC):
     ##
     # USED REST API QUERIES
     ##
-    def get(self, get_to_model=True):
-        response = requests.get(self.URL, auth=('user', 'pass'))
+    def get(self, get_to_model=False):
+        response = requests.get(self.URL)
         # get to SampleModel object
         if get_to_model:
-            pass #dodać jsona i rozbić
-
+            # TODO: set SampleModel object data from json response
+            pass
         return response
 
     def post(self):
-        return requests.post(self.URL, json=self.get_request_body, auth=('user', 'pass'))
+        return requests.post(self.URL, json=self.get_request_body)
 
     def put(self):
-        return requests.put(self.URL, json=self.get_request_body, auth=('user', 'pass'))
+        return requests.put(self.URL, json=self.get_request_body)
 
     def patch(self):
-        return requests.patch(self.URL, json=self.get_request_body, auth=('user', 'pass'))
+        return requests.patch(self.URL, json=self.get_request_body)
 
     def delete(self):
-        return requests.patch(self.URL, json=self.get_request_body, auth=('user', 'pass'))
+        return requests.delete(self.URL, json=self.get_request_body)
+
+    ##
+    # Eq operator overloading for objects assertion
+    ##
+    def __eq__(self, other):
+        if not isinstance(other, SampleModel):
+            # don't attempt to compare against unrelated types
+            return NotImplemented
+
+        return self.first_name == other.first_name and \
+               self.last_name == other.last_name and \
+               self.age == other.age

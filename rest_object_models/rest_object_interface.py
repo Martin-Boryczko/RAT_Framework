@@ -65,3 +65,9 @@ class RestObjectInterface:
 
     def connect(self):
         raise NotImplementedError("RestObjectInterface connect() - method not implemented.")
+
+    ##
+    # Eq operator overloading for objects assertion
+    ##
+    def __eq__(self, other):
+        raise NotImplementedError("RestObjectInterface eq operator overloading - method not implemented.")
